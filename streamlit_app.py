@@ -21,7 +21,8 @@ st.write("Choose the fruits you want in your custom smoothie!")
 # - :memo: [Streamlit in Snowflake release notes](https://docs.snowflake.com/en/release-notes/streamlit-in-snowflake)
 # """)
 
-
+name_on_order = st.text_input("Name on Smoothie: ")
+st.write("The name on your Smoothie will be: ", name_on_order)
 
 # option = st.selectbox(
 #     "What is your favourite fruit?",
@@ -38,7 +39,7 @@ my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT
 
 ingredients_list = st.multiselect(
     "Choose up to 5 ingredients:",
-    my_dataframe
+    my_dataframe, max_selections=5
 )
 
 # st.write("You selected:", options)
@@ -53,8 +54,13 @@ if ingredients_list:
     
     st.write(ingredients_string)
 
-    my_insert_stmt = """ insert into smoothies.public.orders(ingredients)
-            values ('""" + ingredients_string + """')"""
+    my_insert_stmt = """ insert into smoothies.public.orders(ingredients,name_on_order)
+            values ('"""+ ingredients_string +"""','"""+ name_on_order +"""' )"""
+
+    st.write(my_insert_stmt)
+    # st.stop()
+    time_to_insert=st.button('Submit Order')
+    
 
     # st.write(my_insert_stmt)
     time_to_insert=st.button('Submit Order')
